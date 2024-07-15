@@ -1,7 +1,7 @@
 ---
   deployment:
     tasks:
-      - export DEPLOYPATH=/home/awysolution/public_html/citas.aywsolution.com/
+      - export DEPLOYPATH=/home/awysolution/public_html/cita.aywsolution.com/
       - /bin/rsync -av public/ $DEPLOYPATH
       - export DEPLOYPATH=/home/aywsolution/web_citas/
       - /bin/rsync -av ./ $DEPLOYPATH
