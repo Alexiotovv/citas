@@ -9,52 +9,67 @@ use App\Models\Specialty;
 
 class DoctorController extends Controller
 {
-    
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
     public function index()
     {
-        $doctors = User::doctors()->paginate(10);
+        $doctors = User::doctors()->paginate(15);
         return view('doctors.index', compact('doctors'));
     }
 
-    
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
     public function create()
     {
         $specialties = Specialty::all();
         return view('doctors.create', compact('specialties'));
     }
 
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
     public function store(Request $request)
     {
-
-        $rules = [
-            'name' => 'required|min:3',
+        $rules =
+        [
+            'name' => 'required|min:4',
             'email' => 'required|email',
-            'cedula' => 'required|min:8',
+            'identity_card' => 'required',
             'address' => 'nullable|min:6',
-            'phone' => 'required',
+            'phone' => 'required'
         ];
-        $messages = [
-            'name.required' => 'El nombre del médico es obligatorio',
-            'name.min' => 'El nombre del médico debe tener más de 3 caracteres',
-            'email.required' => 'El correo electrónico es obligatorio',
-            'email.email' => 'Ingresa una dirección de correo electrónico válido',
-            'cedula.required' => 'La cédula es obligatorio',
-            'cedula.digits' => 'El Documento de identidad debe de tener mínimo 8 dígitos',
-            'address.min' => 'La dirección debe tener al menos 6 caracteres',
-            'phone.required' => 'El número de teléfono es obligatorio',
+        $messages =
+        [
+            'name.required' => 'El campo Nombre es obligatorio',
+            'name.min' => 'Nombre debe contener al menos 4 carateres',
+            'email.requited' => 'EL Correo no debe estar vacio',
+            'email.email' => 'La Direccion de Correo es Invalida',
+            'identity_card.required' => 'La cedula es requerida',
+            'address.min' => 'La direcion debe contener al menos 6 caracteres'
         ];
-        $this->validate($request, $rules, $messages);
 
-        $user = User::create(
-            $request->only('name','email','cedula','address','phone')
+        $this->validate($request,$rules,$messages);
+
+        $user = User::create
+        (
+            $request->only('name','email','identity_card','address','phone')
             + [
                 'role' => 'doctor',
-                'password' => bcrypt($request->input('password'))
-            ]
+                'password' => 'bcrypt'($request->input('password'))
+              ]
         );
-        $user->specialties()->attach($request->input('specialties'));
+        $user -> specialties()->attach($request->input('specialties'));
 
-        $notification = 'El médico se ha registrado correctamente.';
+        $notification = 'Medico creado Correctamente';
         return redirect('/medicos')->with(compact('notification'));
     }
 
@@ -69,63 +84,81 @@ class DoctorController extends Controller
         //
     }
 
-    
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+
     public function edit($id)
     {
         $doctor = User::doctors()->findOrFail($id);
-        
+
         $specialties = Specialty::all();
+
         $specialty_ids = $doctor->specialties()->pluck('specialties.id');
 
-        return view('doctors.edit', compact('doctor', 'specialties', 'specialty_ids'));
+        return view('doctors.edit', compact('doctor', 'specialties','specialty_ids'));
     }
 
-    
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
     public function update(Request $request, $id)
     {
-        $rules = [
-            'name' => 'required|min:3',
+        $rules =
+        [
+            'name' => 'required|min:4',
             'email' => 'required|email',
-            'cedula' => 'required|min:8',
+            'identity_card' => 'required',
             'address' => 'nullable|min:6',
-            'phone' => 'required',
+            'phone' => 'required'
         ];
-        $messages = [
-            'name.required' => 'El nombre del médico es obligatorio',
-            'name.min' => 'El nombre del médico debe tener más de 3 caracteres',
-            'email.required' => 'El correo electrónico es obligatorio',
-            'email.email' => 'Ingresa una dirección de correo electrónico válido',
-            'cedula.required' => 'La cédula es obligatorio',
-            'cedula.digits' => 'El documento debe de tener mínimo 8 dígitos',
-            'address.min' => 'La dirección debe tener al menos 6 caracteres',
-            'phone.required' => 'El número de teléfono es obligatorio',
+        $messages =
+        [
+            'name.required' => 'El campo Nombre es obligatorio',
+            'name.min' => 'Nombre debe contener al menos 4 carateres',
+            'email.requited' => 'EL Correo no debe estar vacio',
+            'email.email' => 'La Direccion de Correo es Invalida',
+            'identity_card.required' => 'La cedula es requerida',
+            'address.min' => 'La direcion debe contener al menos 6 caracteres'
         ];
-        $this->validate($request, $rules, $messages);
-        $user = User::doctors()->findOrFail($id);
 
-        $data = $request->only('name','email','cedula','address','phone');
+        $this->validate($request,$rules,$messages);
+        $user = User::doctors()->findOrFail($id);
+        $data = $request->only('name','email','identity_card','address','phone');
         $password = $request->input('password');
 
-        if($password)
+        if ($password)
             $data['password'] = bcrypt($password);
 
         $user->fill($data);
         $user->save();
         $user->specialties()->sync($request->input('specialties'));
 
-        $notification = 'La información del médico se actualizo correctamente.';
+        $NombreMedico = $user->name;
+        $notification = 'Los datos del medico '.$NombreMedico.' se han cambiado correctamente';
         return redirect('/medicos')->with(compact('notification'));
     }
 
-    
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
     public function destroy($id)
     {
         $user = User::doctors()->findOrFail($id);
-        $doctorName = $user->name;
+        $NombreMedico = $user->name;
         $user->delete();
 
-        $notification = "El médico $doctorName se elimino correctamente";
-
+        $notification = "El medico $NombreMedico se elimino correctamente";
         return redirect('/medicos')->with(compact('notification'));
     }
 }

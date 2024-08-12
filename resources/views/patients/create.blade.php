@@ -1,7 +1,6 @@
 <?php
-    use Illuminate\Support\Str;
+use Illuminate\Support\Str;
 ?>
-
 @extends('layouts.panel')
 
 @section('content')
@@ -10,12 +9,12 @@
         <div class="card-header border-0">
             <div class="row align-items-center">
                 <div class="col">
-                    <h3 class="mb-0">Nuevo paciente</h3>
+                    <h3 class="mb-0">Generar Nuevo</h3>
                 </div>
                 <div class="col text-right">
                     <a href="{{ url('/pacientes') }}" class="btn btn-sm btn-success">
                         <i class="fas fa-chevron-left"></i>
-                        Regresar</a>
+                        Volver</a>
                 </div>
             </div>
         </div>
@@ -26,7 +25,7 @@
                 @foreach ($errors->all() as $error)
                     <div class="alert alert-danger" role="alert">
                         <i class="fas fa-exclamation-triangle"></i>
-                        <strong>Por favor!!</strong> {{ $error }}
+                        <strong>Por Favor!!! </strong>{{ $error }}
                     </div>
                 @endforeach
             @endif
@@ -34,35 +33,36 @@
             <form action="{{ url('/pacientes') }}" method="POST">
                 @csrf
                 <div class="form-group">
-                    <label for="name">Nombre del paciente</label>
+                    <label for="name">Nombre</label>
                     <input type="text" name="name" class="form-control" value="{{ old('name') }}" required>
                 </div>
 
                 <div class="form-group">
-                    <label for="email">Correo electrónico</label>
-                    <input type="text" name="email" class="form-control" value="{{ old('email') }}">
+                    <label for="email">Correo</label>
+                    <input type="text" name="email" class="form-control" value={{ old('email') }}>
                 </div>
+
                 <div class="form-group">
-                    <label for="cedula">Cédula</label>
-                    <input type="text" name="cedula" class="form-control" value="{{ old('cedula') }}">
+                    <label for="identity_card">Cédula</label>
+                    <input type="text" name="identity_card" class="form-control" value={{ old('identity_card') }}>
                 </div>
+
                 <div class="form-group">
                     <label for="address">Dirección</label>
-                    <input type="text" name="address" class="form-control" value="{{ old('address') }}">
+                    <input type="text" name="address" class="form-control" value={{ old('address') }}>
                 </div>
+
                 <div class="form-group">
-                    <label for="phone">Teléfono / Móvil</label>
-                    <input type="text" name="phone" class="form-control" value="{{ old('phone') }}">
+                    <label for="phone">Teléfono</label>
+                    <input type="text" name="phone" class="form-control" value={{ old('phone') }}>
                 </div>
                 <div class="form-group">
                     <label for="password">Contraseña</label>
-                    <input type="text" name="password" class="form-control" value="{{ old('password', Str::random(8)) }}">
+                    <input type="text" name="password" class="form-control"
+                        value="{{ old('password', Str::random(10)) }}">
                 </div>
-
-                <button type="submit" class="btn btn-sm btn-primary">Crear paciente</button>
+                <button type="submit" class="btn btn-sm btn-primary">Añadir</button>
             </form>
         </div>
-
     </div>
-
 @endsection

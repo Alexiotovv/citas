@@ -1,18 +1,17 @@
 let $doctor, $date, $specialty, iRadio;
-let $hoursMorning, $hoursAfternoon, $titleMorning, $titleAfternoon;
+let $hoursMorning, $hoursAfternoon, $titleMorning, $ktitleAfternoon;
 
 const titleMorning = `
-    En la mañana
+    En la Mañana
 `;
+
 const titleAfternoon = `
-    En la tarde
+    En la Tarde
 `;
 
-const noHours = `<h5 class="text-danger">
-    No hay horas disponibles.
-</h5>`;
+const noHours = `<h5 class="text-danger">No hay Horas Disponibles</h5>`;
 
-$(function(){
+$(function () {
     $specialty = $('#specialty');
     $doctor = $('#doctor');
     $date = $('#date');
@@ -24,14 +23,14 @@ $(function(){
     $specialty.change(() => {
         const specialtyId = $specialty.val();
         const url = `/especialidades/${specialtyId}/medicos`;
-        $.getJSON(url, onDoctorsLoaded);
+        $.getJSON(url, onDoctorsLoaded)
     });
 
     $doctor.change(loadHours);
     $date.change(loadHours);
 });
 
-function onDoctorsLoaded (doctors) {
+function onDoctorsLoaded(doctors) {
     let htmlOptions = '';
     doctors.forEach(doctor => {
         htmlOptions += `<option value="${doctor.id}" >${doctor.name}</option>`;
@@ -48,29 +47,31 @@ function loadHours() {
     $.getJSON(url, displayHours);
 }
 
-function displayHours(data){
+function displayHours(data) {
     let htmlHoursM = '';
     let htmlHoursA = '';
 
     iRadio = 0;
 
-    if(data.morning){
+    if (data.morning) {
         const morning_intervalos = data.morning;
         morning_intervalos.forEach(intervalo => {
-            htmlHoursM +=  getRadioIntervaloHTML(intervalo);
+            htmlHoursM += getRadioIntervaloHTML(intervalo);
         });
     }
-    if(!htmlHoursM != ""){
+
+    if (!htmlHoursM != "") {
         htmlHoursM += noHours;
     }
 
-    if(data.afternoon){
+    if (data.afternoon) {
         const afternoon_intervalos = data.afternoon;
         afternoon_intervalos.forEach(intervalo => {
-            htmlHoursA +=  getRadioIntervaloHTML(intervalo);
+            htmlHoursA += getRadioIntervaloHTML(intervalo);
         });
     }
-    if(!htmlHoursA != ""){
+
+    if (!htmlHoursA != "") {
         htmlHoursA += noHours;
     }
 
@@ -80,11 +81,12 @@ function displayHours(data){
     $titleAfternoon.html(titleAfternoon);
 }
 
-function getRadioIntervaloHTML(intervalo){
+function getRadioIntervaloHTML(intervalo) {
     const text = `${intervalo.start} - ${intervalo.end}`;
 
     return `<div class="custom-control custom-radio mb-3">
-            <input type="radio" id="interval${iRadio}" name="scheduled_time" value="${intervalo.start}" class="custom-control-input" required>
-            <label class="custom-control-label" for="interval${iRadio++}">${text}</label>
-            </div>`;
+        <input type="radio" id="interval${iRadio}" name="scheduled_time" value="${intervalo.start}" class="custom-control-input" required>
+        <label class="custom-control-label" for="interval${iRadio++}">${text}</label>
+     </div>
+    `;
 }

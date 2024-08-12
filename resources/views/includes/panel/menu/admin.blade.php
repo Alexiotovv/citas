@@ -1,5 +1,5 @@
-<li class="nav-item  active ">
-    <a class="nav-link  active " href="/home">
+<li class="nav-item active ">
+    <a class="nav-link active " href="/home">
         <i class="ni ni-tv-2 text-danger"></i> Dashboard
     </a>
 </li>
@@ -19,7 +19,7 @@
     </a>
 </li>
 <li class="nav-item">
-   <a class="nav-link " href="/miscitas">
-       <i class="fas fa-clock text-info"></i> Citas médicas
-   </a>
+    <a class="nav-link " href="/miscitas">
+        <i class="fas fa-clock text-info"></i> Citas Médicas
+    </a>
 </li>

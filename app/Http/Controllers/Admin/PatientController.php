@@ -8,47 +8,61 @@ use App\Http\Controllers\Controller;
 
 class PatientController extends Controller
 {
+     /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
     public function index()
     {
-        $patients = User::patients()->paginate(10);
+        $patients = User::patients()->paginate(15);
         return view('patients.index', compact('patients'));
     }
 
-    
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
     public function create()
     {
         return view('patients.create');
     }
 
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
     public function store(Request $request)
     {
         $rules = [
-            'name' => 'required|min:3',
+            'name' => 'required|min:4',
             'email' => 'required|email',
-            'cedula' => 'required|min:8',
-            'address' => 'nullable|min:6',
+            'identity_card' => 'required',
+            'address' => 'nullable|min:10',
             'phone' => 'required',
         ];
         $messages = [
-            'name.required' => 'El nombre del paciente es obligatorio',
-            'name.min' => 'El nombre del paciente debe tener más de 3 caracteres',
-            'email.required' => 'El correo electrónico es obligatorio',
-            'email.email' => 'Ingresa una dirección de correo electrónico válido',
-            'cedula.required' => 'El documento es obligatorio',
-            'cedula.digits' => 'documento de identidad debe de tener al menos 8 dígitos',
-            'address.min' => 'La dirección debe tener al menos 6 caracteres',
-            'phone.required' => 'El número de teléfono es obligatorio',
+            'name.required' =>  'El nombre es obligatorio!',
+            'name.min' =>  'El nombre debe poseer mas de 4 caracteres',
+            'email.required' =>  'El correo electronico es obligatorio!',
+            'email.email' =>  'Por favor ingresar una direccion de correo valido',
+            'identity_card.required' =>  'La cedula es obligatoria',
+            'address.min' =>  'La direccion debe tener al menos 10 digitos!',
+            'phone.required' =>  'El numero de telefono es obligatorio',
         ];
         $this->validate($request, $rules, $messages);
 
         User::create(
-            $request->only('name','email','cedula','address','phone')
-            + [
+            $request->only('name','email','identity_card','address','phone')
+            +[
                 'role' => 'paciente',
                 'password' => bcrypt($request->input('password'))
             ]
         );
-        $notification = 'El paciente se ha registrado correctamente.';
+        $notification = "El paciente se registró correctamente.";
         return redirect('/pacientes')->with(compact('notification'));
     }
 
@@ -63,56 +77,72 @@ class PatientController extends Controller
         //
     }
 
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
     public function edit($id)
     {
-        $patient = User::Patients()->findOrFail($id);
+        $patient = User::patients()->findOrFail($id);
         return view('patients.edit', compact('patient'));
     }
 
-   
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
     public function update(Request $request, $id)
     {
         $rules = [
-            'name' => 'required|min:3',
+            'name' => 'required|min:4',
             'email' => 'required|email',
-            'cedula' => 'required|min:8',
-            'address' => 'nullable|min:6',
+            'identity_card' => 'required',
+            'address' => 'nullable|min:10',
             'phone' => 'required',
         ];
         $messages = [
-            'name.required' => 'El nombre del paciente es obligatorio',
-            'name.min' => 'El nombre del paciente debe tener más de 3 caracteres',
-            'email.required' => 'El correo electrónico es obligatorio',
-            'email.email' => 'Ingresa una dirección de correo electrónico válido',
-            'cedula.required' => 'La cédula es obligatorio',
-            'cedula.digits' => 'La cédula debe de tener mínimo 8 dígitos',
-            'address.min' => 'La dirección debe tener al menos 6 caracteres',
-            'phone.required' => 'El número de teléfono es obligatorio',
+            'name.required' =>  'El nombre es obligatorio!',
+            'name.min' =>  'El nombre debe poseer mas de 4 caracteres',
+            'email.required' =>  'El correo electronico es obligatorio!',
+            'email.email' =>  'Por favor ingresar una direccion de correo valido',
+            'identity_card.required' =>  'La cedula es obligatoria',
+            'address.min' =>  'La direccion debe tener al menos 10 digitos!',
+            'phone.required' =>  'El numero de telefono es obligatorio',
         ];
         $this->validate($request, $rules, $messages);
-        $user = User::Patients()->findOrFail($id);
-
-        $data = $request->only('name','email','cedula','address','phone');
+        $user = User::patients()->findorFail($id);
+        $data =  $request->only('name','email','identity_card','address','phone');
         $password = $request->input('password');
 
         if($password)
-            $data['password'] = bcrypt($password);
+        $data['password'] = bcrypt($password);
 
         $user->fill($data);
         $user->save();
 
-        $notification = 'La información del paciente se actualizo correctamente.';
+        $Nombrepaciente = $user->name;
+        $notification = "El paciente $Nombrepaciente se registró correctamente.";
         return redirect('/pacientes')->with(compact('notification'));
     }
 
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
     public function destroy($id)
     {
-        $user = User::Patients()->findOrFail($id);
-        $PacienteName = $user->name;
+        $user = User::patients()->findOrFail($id);
+        $Nombrepaciente = $user->name;
         $user->delete();
 
-        $notification = "El médico $PacienteName se elimino correctamente";
-
+        $notification = "El medico $Nombrepaciente se elimino correctamente";
         return redirect('/pacientes')->with(compact('notification'));
     }
 }

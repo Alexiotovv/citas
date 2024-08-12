@@ -1,23 +1,19 @@
 @extends('layouts.panel')
 
 @section('content')
-
-        <div class="card shadow">
-            <div class="card-header border-0">
-                <div class="row align-items-center">
-                    <div class="col">
-                        <h3 class="mb-0">Reporte: Frecuencia de citas</h3>
-                    </div>
-                    
-                </div>
-            </div>
-            <div class="card-body">
-                <div id="container">
-
+    <div class="card shadow">
+        <div class="card-header border-0">
+            <div class="row align-items-center">
+                <div class="col">
+                    <h3 class="mb-0">Reporte: Frecuencia de Citas</h3>
                 </div>
             </div>
         </div>
-    
+        <div class="card-body">
+            <div id="container">
+            </div>
+        </div>
+    </div>
 @endsection
 
 @section('scripts')
@@ -32,14 +28,15 @@
                 type: 'line'
             },
             title: {
-                text: 'Citas registradas mensualmente'
+                text: 'Citas por Mes'
             },
+
             xAxis: {
-                categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+                categories: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic']
             },
             yAxis: {
                 title: {
-                    text: 'Cantidad de citas'
+                    text: 'Cantidad de Citas'
                 }
             },
             plotOptions: {
@@ -51,10 +48,9 @@
                 }
             },
             series: [{
-                name: 'Citas registradas',
+                name: 'Citas Registradas',
                 data: @json($counts)
             }]
         });
-
     </script>
 @endsection
