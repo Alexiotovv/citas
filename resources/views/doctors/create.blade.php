@@ -60,7 +60,7 @@
             </div>
 
             <div class="form-group">
-                <label for="identity_card">Cédula</label>
+                <label for="identity_card">Documento</label>
                 <input type="text" name="identity_card" class="form-control" value={{ old('identity_card')}}>
             </div>
 

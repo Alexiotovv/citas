@@ -27,7 +27,7 @@
           <tr>
             <th scope="col">Nombre</th>
             <th scope="col">Correo</th>
-            <th scope="col">Cédula</th>
+            <th scope="col">Documento</th>
             <th scope="col">Dirección</th>
             <th scope="col">Teléfono</th>
             <th scope="col">Opciones</th>

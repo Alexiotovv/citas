@@ -3,6 +3,8 @@
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\SpecialtyController;
+use App\Http\Controllers\Admin\PatientController;
+use App\Http\Controllers\TestsController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -33,11 +35,22 @@ Route::middleware(['auth', 'admin'])->group(function () {
 
     //Ruta de Pacientes
     Route::resource('pacientes','App\Http\Controllers\Admin\PatientController');
+    Route::get('/pacientes', [PatientController::class, 'index'])->name('patients.index');
 
     //Ruta de Reportes
     Route::get('/reportes/citas/line', [App\Http\Controllers\Admin\ChartController::class, 'appointments']);
     Route::get('/reportes/doctors/column', [App\Http\Controllers\Admin\ChartController::class, 'doctors']);
     Route::get('/reportes/doctors/column/data', [App\Http\Controllers\Admin\ChartController::class, 'doctorsJason']);
+});
+
+//Rutas Pruebas
+Route::middleware(['auth'])->group(function () {
+    Route::get('/pruebas/index/{cita_id}', [TestsController::class, 'index'])->name('pruebas.index');
+    Route::post('/pruebas/store/', [TestsController::class, 'store'])->name('pruebas.store');
+    Route::get('/pruebas/destroy/{test_id}', [TestsController::class, 'destroy'])->name('pruebas.destroy');
+    Route::get('/pruebas/edit/{test_id}', [TestsController::class, 'edit'])->name('pruebas.edit');
+    Route::post('/pruebas/update/', [TestsController::class, 'update'])->name('pruebas.update');
+
 });
 
 

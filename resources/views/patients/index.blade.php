@@ -18,6 +18,30 @@
                     {{ session('notification') }}
                 </div>
             @endif
+            <h3 class="mb-0">Buscar</h3>
+            <form action="{{ route('patients.index') }}" method="GET">
+            <div class="row">
+
+                    <div class="col-md-2">
+                        <label for="nombre">Nombre</label>
+                        <input type="text" class="form-control form-control-sm" id="nombre" name="nombre">
+                    </div>
+                    <div class="col-md-2">
+                        <label for="correo">Correo</label>
+                        <input type="text" class="form-control form-control-sm" id="correo" name="correo">
+                    </div>
+                    <div class="col-md-2">
+                        <label for="documento">Documento</label>
+                        <input type="text" class="form-control form-control-sm" id="documento" name="documento">
+                    </div>
+                    <div class="col-md-2">
+                        
+                        <br>
+                        <button class="btn btn-primary btn-sm" id="buscar" name="buscar">Buscar</button>
+                    </div>
+                </div>
+            </form>
+
         </div>
         <div class="table-responsive">
             <!-- Projects table -->
@@ -26,7 +50,7 @@
                     <tr>
                         <th scope="col">Nombre</th>
                         <th scope="col">Correo</th>
-                        <th scope="col">Cédula</th>
+                        <th scope="col">Documento</th>
                         <th scope="col">Dirección</th>
                         <th scope="col">Teléfono</th>
                         <th scope="col">Opciones</th>
@@ -43,7 +67,7 @@
                                 {{ $patient->email }}
                             </td>
                             <td>
-                                {{ $patient->identity_card }}
+                                {{ $patient->cedula }}
                             </td>
                             <td>
                                 {{ $patient->address }}
@@ -56,8 +80,8 @@
                                     @csrf
                                     @method('DELETE')
                                     <a href="{{ url('/pacientes/' . $patient->id . '/edit') }}"
-                                        class="btn btn-sn btn-primary">Editar</a>
-                                    <button type="submit" class="btn btn-sn btn-danger">Eliminar</button>
+                                        class="btn btn-sm btn-primary">Editar</a>
+                                    <button type="submit" class="btn btn-sm btn-danger">Eliminar</button>
                                 </form>
                             </td>
                         </tr>

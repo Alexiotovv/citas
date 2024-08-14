@@ -41,6 +41,8 @@ class AppointmentController extends Controller
         } elseif ($role == 'paciente') {
             // Pacientes
             $confirmedAppointments = Appointment::where('status', 'Confirmada')
+                ->leftjoin('users','users.id','=','appointments.patient_id')
+                ->select('appointments.*','users.name')
                 ->where('patient_id', auth()->id())
                 ->get();
             $pendingAppointments = Appointment::where('status', 'Reservada')

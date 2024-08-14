@@ -13,12 +13,27 @@ class PatientController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
-    {
-        $patients = User::patients()->paginate(15);
+    public function index(Request $request)
+    {   
+        $query = User::patients()->orderBy('id', 'desc');
+    
+        // Aplicar filtros si existen
+        if ($request->filled('nombre')) {
+            $query->where('name', 'like', '%' . $request->input('nombre') . '%');
+        }
+        if ($request->filled('correo')) {
+            $query->where('email', 'like', '%' . $request->input('correo') . '%');
+        }
+        if ($request->filled('documento')) {
+            $query->where('cedula', 'like', '%' . $request->input('documento') . '%');
+        }
+    
+        // Obtener los resultados paginados
+        $patients = $query->paginate(15);
+    
         return view('patients.index', compact('patients'));
     }
-
+    
     /**
      * Show the form for creating a new resource.
      *
@@ -49,7 +64,7 @@ class PatientController extends Controller
             'name.min' =>  'El nombre debe poseer mas de 4 caracteres',
             'email.required' =>  'El correo electronico es obligatorio!',
             'email.email' =>  'Por favor ingresar una direccion de correo valido',
-            'identity_card.required' =>  'La cedula es obligatoria',
+            'identity_card.required' =>  'El documento es obligatoria',
             'address.min' =>  'La direccion debe tener al menos 10 digitos!',
             'phone.required' =>  'El numero de telefono es obligatorio',
         ];

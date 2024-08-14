@@ -1,8 +1,9 @@
 <div class="table-responsive">
     <!-- Projects table -->
-    <table class="table align-items-center table-flush">
+    <table class="table align-items-center table-stripped table-flush">
         <thead class="thead-light">
             <tr>
+                
                 <th scope="col">Descripción</th>
                 <th scope="col">Especialidad</th>
                 @if ($role == 'paciente')
@@ -21,9 +22,9 @@
 
             @foreach ($confirmedAppointments as $cita)
                 <tr>
-                    <th scope="row">
+                    <td scope="row">
                         {{ $cita->description }}
-                    </th>
+                    </td>
                     <td>
                         {{ $cita->specialty->name }}
                     </td>
@@ -50,9 +51,13 @@
                     </td>
                     <td>
                         @if ($role == 'admin')
-                            <a href="{{ url('/miscitas/'.$cita->id)}}" class="btn btn-sn btn-info" title="Ver Cita">Ver</a>
+                            <a href="{{ url('/miscitas/'.$cita->id)}}" class="btn btn-sm btn-info" title="Ver Cita">Ver</a>
                         @endif
-                        <a href="{{ url('/miscitas/'.$cita->id.'/cancel')}}" class="btn btn-sn btn-danger" title="Cancelar Cita">Cancelar</a>
+                        <a href="{{ url('/miscitas/'.$cita->id.'/cancel')}}" class="btn btn-sm btn-danger" title="Cancelar Cita">Cancelar</a>
+                        {{-- {{ url('/misresultados/'.$cita->id)}} --}}
+                        <button onclick="btnPruebas('{{$cita->id}}')" class="btn btn-sm btn-primary" title="Pruebas">Pruebas/Resultados</button>
+                        
+                        
                     </td>
                 </tr>
             @endforeach

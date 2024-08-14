@@ -53,7 +53,7 @@ class DoctorController extends Controller
             'name.min' => 'Nombre debe contener al menos 4 carateres',
             'email.requited' => 'EL Correo no debe estar vacio',
             'email.email' => 'La Direccion de Correo es Invalida',
-            'identity_card.required' => 'La cedula es requerida',
+            'identity_card.required' => 'El documento es requerida',
             'address.min' => 'La direcion debe contener al menos 6 caracteres'
         ];
 
