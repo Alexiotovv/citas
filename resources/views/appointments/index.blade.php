@@ -258,7 +258,7 @@
             ds=$("#formPruebas").serialize();
             $.ajax({
                 type: "POST",
-                url: "/pruebas/store/",
+                url: "/pruebas/store",
                 data: ds,
                 dataType: "json",
                 success: function (response) {
