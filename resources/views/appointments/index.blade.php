@@ -154,7 +154,7 @@
             ds=$("#formActualizaResultados").serialize();
             $.ajax({
                 type: "POST",
-                url: "/resultados/update/",
+                url: "/resultados/update",
                 data: ds,
                 dataType: "json",
                 success: function (response) {
@@ -191,7 +191,7 @@
             ds=$("#formResultados").serialize();
             $.ajax({
                 type: "POST",
-                url: "/resultados/store/",
+                url: "/resultados/store",
                 data: ds,
                 dataType: "json",
                 success: function (response) {
@@ -213,7 +213,7 @@
             ds=$("#formEditPruebas").serialize();
             $.ajax({
                 type: "POST",
-                url: "/pruebas/update/",
+                url: "/pruebas/update",
                 data: ds,
                 dataType: "json",
                 success: function (response) {
