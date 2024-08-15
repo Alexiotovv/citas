@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\SpecialtyController;
 use App\Http\Controllers\Admin\PatientController;
 use App\Http\Controllers\TestsController;
+use App\Http\Controllers\ResultadosController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -51,7 +52,14 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/pruebas/edit/{test_id}', [TestsController::class, 'edit'])->name('pruebas.edit');
     Route::post('/pruebas/update/', [TestsController::class, 'update'])->name('pruebas.update');
 
+    //Resultados
+    Route::post('/resultados/store/', [ResultadosController::class, 'store'])->name('resultados.store');
+    Route::get('/resultados/destroy/{resultado_id}', [ResultadosController::class, 'destroy'])->name('resultados.destroy');
+    Route::get('/resultados/edit/{resultado_id}', [ResultadosController::class, 'edit'])->name('resultados.edit');
+    Route::post('/resultados/update/', [ResultadosController::class, 'update'])->name('resultados.update');
 });
+
+
 
 
 //Rutas de Medicos

@@ -68,7 +68,7 @@
                                 <input type="text" class="form-control form-control-sm" id="tests_name" name="tests_name"  required>
                             </div>
                             <div class="col-md-6">
-                                <label for="tests_comments">Comentarios</label>
+                                <label for="tests_comments">Descripcion Prueba</label>
                                 <textarea name="tests_comments" id="tests_comments" class="form-control form-control-sm"  required></textarea>
                             </div>
                             
@@ -86,17 +86,16 @@
                                     <tr>
                                         <th>Id</th>
                                         <th>Nombre Prueba</th>
-                                        <th>Comentario</th>
+                                        <th>Descripcion</th>
+                                        <th>Resultados</th>
                                         <th>Acciones</th>
                                     </tr>
                                 </thead>
                                 <tbody>
         
                                 </tbody>
-                            </table>
-    
+                            </table>    
                         </div>
-    
                     </div>
     
                     <div class="modal-footer">
@@ -119,13 +118,13 @@
                 <form id="formEditPruebas" method="POST">@csrf
                     <div class="modal-body">
                         <div class="row">
-                            <div class="col-md-6">
+                            <div class="col-md-12">
                                 <input type="text" id="test_id" name="test_id" readonly hidden>
                                 <label for="edit_tests_name">Nombre de Prueba</label>
                                 <input type="text" class="form-control form-control-sm" id="edit_tests_name" name="edit_tests_name"  required>
                             </div>
-                            <div class="col-md-6">
-                                <label for="edit_tests_comments">Comentarios</label>
+                            <div class="col-md-12">
+                                <label for="edit_tests_comments">Descripción</label>
                                 <textarea name="edit_tests_comments" id="edit_tests_comments" class="form-control form-control-sm"  required></textarea>
                             </div>
                             
@@ -145,10 +144,71 @@
     </div>
 
     @include('messages.confirmacion_eliminar_asin')
+    @include('resultados.create')
+    @include('resultados.edit')
+    
 
     <script>
+        function btnActualizarResultados(e) {
+            e.preventDefault();
+            ds=$("#formActualizaResultados").serialize();
+            $.ajax({
+                type: "POST",
+                url: "/resultados/update/",
+                data: ds,
+                dataType: "json",
+                success: function (response) {
+                    alert(response.message);
+                    $("#modalEditarResultados").modal("hide");
+                    cargarPruebas($("#cita_id").val());
+                }
+            });
+        }
+        
+        function btnEditarResultado(id_resultado) {
+            $("#result_id").val(id_resultado);
+            $.ajax({
+                type: "GET",
+                url: "/resultados/edit/"+id_resultado,
+                dataType: "json",
+                success: function (response) {
+                    $("#edit_title").val(response.data.title);
+                    $("#edit_description").val(response.data.description);
+                }
+            });
+            $("#modalEditarResultados").modal("show");
+        }
+        btnActualizarResultados
 
-        function btnActualizarPruebas() {
+        function btnEliminarResultado(id_resultado) {
+            $("#id_registro_eliminar").val(id_resultado);
+            $("#ruta_eliminar").val("/resultados/destroy/")
+            $("#modalConfirmarEliminar").modal("show");
+        }
+
+        function btnRegistrarResultados(e) {
+            e.preventDefault();
+            ds=$("#formResultados").serialize();
+            $.ajax({
+                type: "POST",
+                url: "/resultados/store/",
+                data: ds,
+                dataType: "json",
+                success: function (response) {
+                    cargarPruebas($("#cita_id").val());
+                    $("#modalAgregarResultados").modal("hide");        
+                    alert(response.message);
+                }
+            });
+        }
+
+        function modalAgregarResultados(e,id_test) {
+            e.preventDefault();
+            $("#result_test_id").val(id_test);
+            $("#modalAgregarResultados").modal("show");
+        }
+
+        function btnActualizarPruebas(e) {
             e.preventDefault();
             ds=$("#formEditPruebas").serialize();
             $.ajax({
@@ -165,7 +225,7 @@
         }
 
         function modalEditarPrueba(e,id) {
-            
+            $("#test_id").val(id);
             $.ajax({
                 type: "GET",
                 url: "/pruebas/edit/"+id,
@@ -179,11 +239,12 @@
         }
 
         function btnConfirmarEliminar() {
-            id_eliminar=$("#id_registro_eliminar").val();
+            let  id_eliminar=$("#id_registro_eliminar").val();
+            let ruta = $("#ruta_eliminar").val();
             $("#modalConfirmarEliminar").modal("hide");
             $.ajax({
                 type: "GET",
-                url: "/pruebas/destroy/"+id_eliminar,
+                url: ruta+id_eliminar,
                 dataType: "json",
                 success: function (response) {
                     alert(response.message);
@@ -218,25 +279,39 @@
         function cargarPruebas(cita_id) { 
             $.ajax({
                 type: "GET",
-                url: "/pruebas/index/"+cita_id,
+                url: "/pruebas/index/" + cita_id,
                 dataType: "json",
                 success: function (response) {
                     $("#dtTests tbody").html("");
-                    let num=0
-                    response.data.forEach(element => {
-                        num+=1
-                        if (element.tests_comments===null) {
-                            comentario=""
-                        }else{
-                            comentario=element.tests_comments
-                        }
+                    let num = 0
+                    response.pruebas.forEach(element => {
+                        let resultado=""
+                        
+                        num += 1
+                        if (element.tests_comments===null) { descripcion = "" }else{ descripcion=element.tests_comments }
+                        response.resultados.forEach(resultados => {
+                            if (resultados.tests_id===element.id) {
+                                resultado = resultado+"Título: "+resultados.title + "<br> " +
+                                " Descripción: "+resultados.description+"<br>"+
+                                "<i class='fas fa-window-close' onclick='btnEliminarResultado("+ resultados.id +")'></i>"+" "+
+                                "<i class='fas fa-pencil-alt' onclick='btnEditarResultado("+ resultados.id +")'></i>"+
+                                "<hr>"
+                                
+                            }
+                        });
+
                         $("#dtTests tbody").append("<tr>"+
                                 "<td>"+ num +"</td>"+
                                 "<td>"+ element.tests_name +"</td>"+
-                                "<td>"+ comentario +"</td>"+
+                                "<td>"+ descripcion +"</td>"+
+                                "<td>"+ 
+                                    "<button onclick='modalAgregarResultados(event,"+element.id+")' data-bs-toggle='tooltip' title='agregar resultados' class='btn btn-sm btn-primary'><i class='fas fa-plus-circle'></i></button>"+
+                                            "<p>" + resultado + "</p>" +
+                                            "<br>"+
+                                "</td>"+
                                 "<td>"+
-                                    "<button type='button' onclick='modalEditarPrueba(event,"+ element.id +")' class='btn btn-sm btn-warning' data-bs-toggle='tooltip' title='editar'><i class='fas fa-edit' ></i></button>" +
-                                    "<button type='button' onclick='modalConfirmarEliminarTests(event,"+ element.id +")' class='btn btn-sm btn-danger' data-bs-toggle='tooltip' title='eliminar'><i class='fas fa-window-close'></i></button>" +
+                                    "<button type='button' onclick='modalEditarPrueba(event,"+ element.id +")' class='btn btn-sm btn-warning' data-bs-toggle='tooltip' title='editar prueba'><i class='fas fa-edit' ></i></button>" +
+                                    "<button type='button' onclick='modalConfirmarEliminarTests(event,"+ element.id +")' class='btn btn-sm btn-danger' data-bs-toggle='tooltip' title='eliminar prueba'><i class='fas fa-window-close'></i></button>" +
                                 "</td>"+
                             "</tr>"
                         );
@@ -250,6 +325,7 @@
          function modalConfirmarEliminarTests(e,id_test) {
             e.preventDefault();
             $("#id_registro_eliminar").val(id_test);
+            $("#ruta_eliminar").val("/pruebas/destroy/");
             $("#modalConfirmarEliminar").modal("show");
          }
 

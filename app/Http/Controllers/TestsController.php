@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\tests;
+use App\Models\resultados;
 use Illuminate\Http\Request;
 
 class TestsController extends Controller
@@ -15,7 +16,11 @@ class TestsController extends Controller
     public function index($cita_id)
     {
         $pruebas = tests::where('appointments_id',$cita_id)->get();
-        return response()->json(['data'=>$pruebas], 200);
+        $resultados = tests::where('appointments_id',$cita_id)
+        ->leftjoin('resultados','resultados.tests_id','=','tests.id')
+        ->select('resultados.id','resultados.tests_id','resultados.title','resultados.description')
+        ->get();
+        return response()->json(['pruebas'=>$pruebas,'resultados'=>$resultados], 200);
     }
 
     /**
@@ -76,13 +81,13 @@ class TestsController extends Controller
      * @param  \App\Models\tests  $tests
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, tests $tests)
+    public function update(Request $request)
     {
-        $request->input('test_id');
-        $tests=tests::find($tests_id);
-        $pruebas->tests_name=$request->input('edit_tests_name');
-        $pruebas->tests_comments=$request->input('edit_tests_comments');
-        $pruebas->save();
+        
+        $tests = tests::find($request->input('test_id'));
+        $tests->tests_name = $request->input('edit_tests_name');
+        $tests->tests_comments = $request->input('edit_tests_comments');
+        $tests->save();
 
         return response()->json(['message'=>'Registro Actualizado'], 200);
     }
@@ -95,7 +100,11 @@ class TestsController extends Controller
      */
     public function destroy($tests_id)
     {
-        // $existe_datos=
+        $existe_datos=resultados::where('tests_id',$tests_id)->exists();
+
+        if ($existe_datos) {
+            return response()->json(['message'=>'No se puede eliminar, contiene datos'], 200);    
+        }
 
         $tests = tests::find($tests_id);
         $tests->delete();

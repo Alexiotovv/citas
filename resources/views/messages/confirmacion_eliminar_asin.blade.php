@@ -7,7 +7,8 @@
             </div>
             
                 <div class="modal-body">
-                    <input type="text" id="id_registro_eliminar" hidden>
+                    <input type="text" id="id_registro_eliminar" readonly hidden>
+                    <input type="text" id="ruta_eliminar" readonly hidden>
                     <p>Confirme por favor para poder eliminar</p>
                 </div>
                 <div class="modal-footer">

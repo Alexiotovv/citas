@@ -24,7 +24,7 @@
         <nav class="navbar navbar-top navbar-horizontal navbar-expand-md navbar-dark">
             <div class="container px-4">
                 <a class="navbar-brand" href="/">
-                    <img src="{{ asset('img/brand/white.png') }}" />
+                    {{-- <img src="{{ asset('img/brand/white.png') }}" /> --}}
                 </a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-collapse-main"
                     aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -36,7 +36,7 @@
                         <div class="row">
                             <div class="col-6 collapse-brand">
                                 <a href="#">
-                                    <img src="{{ asset('img/brand/blue.png') }}">
+                                    {{-- <img src="{{ asset('img/brand/blue.png') }}"> --}}
                                 </a>
                             </div>
                             <div class="col-6 collapse-close">
@@ -51,7 +51,7 @@
                     </div>
                     <!-- Navbar items -->
                     <ul class="navbar-nav ml-auto">
-                        <li class="nav-item">
+                        {{-- <li class="nav-item">
                             <a class="nav-link nav-link-icon" href="/">
                                 <i class="ni ni-planet"></i>
                                 <span class="nav-link-inner--text">Landing Page</span>
@@ -68,7 +68,7 @@
                                 <i class="ni ni-key-25"></i>
                                 <span class="nav-link-inner--text">Login</span>
                             </a>
-                        </li>
+                        </li> --}}
                         <li class="nav-item">
                             <a class="nav-link nav-link-icon" href="#">
                                 <i class="ni ni-single-02"></i>
@@ -106,8 +106,8 @@
                 <div class="row align-items-center justify-content-xl-between">
                     <div class="col-xl-6">
                         <div class="copyright text-center text-xl-left text-muted">
-                            © 2022 <a href="https://github.com/StevenU21" class="font-weight-bold ml-1"
-                                target="_blank">StevenU21</a>
+                            © 2024 <a href="#" class="font-weight-bold ml-1"
+                                target="_blank"></a>
                         </div>
                     </div>
                 </div>
@@ -120,14 +120,7 @@
     <!--   Optional JS   -->
     <!--   Argon JS   -->
     <script src="{{ asset('js/argon-dashboard.min.js?v=1.1.2') }}"></script>
-    <script src=""></script>
-    <script>
-        window.TrackJS &&
-            TrackJS.install({
-                token: "ee6fab19c5a04ac1a32a645abde4613a",
-                application: "argon-dashboard-free"
-            });
-    </script>
+   
 </body>
 
 </html>
